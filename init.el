@@ -39,12 +39,12 @@
 ;;; Org mode
 (require 'org)
 (setq org-directory "~/Dropbox/Org")
-(setq org-default-notes-file (concat org-directory "/notes.org"))
-(setq org-agenda-files (list (concat org-directory "/gtd.org")))
+(setq org-default-notes-file "notes.org")
+(setq org-agenda-files (list "gtd.org"))
 (setq org-capture-templates
-      '(("t" "Todo" entry (file+headline (concat org-directory "/gtd.org") "Ins")
+      '(("t" "Todo" entry (file+headline "gtd.org" "Ins")
          "* TODO %?\n%i\n%a")
-        ("j" "Journal" entry (file+olp+datetree (concat org-directory "/journal.org"))
+        ("j" "Journal" entry (file+olp+datetree "journal.org")
          "* %?\nEntered on %U\n%i\n%a")))
 (add-to-list 'org-structure-template-alist
 	     (list "P" (concat "#+TITLE: ?\n"

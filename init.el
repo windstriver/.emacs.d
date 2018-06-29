@@ -113,9 +113,20 @@
 ;;; company
 (use-package company
   :ensure t
-  :init (global-company-mode)
+  :init
+  ;(global-company-mode)
   :config
   (progn
     (setq company-tooltip-align-annotations t)
     (setq comany-show-numbers t))
   :diminish company-mode)
+
+;;; smartparens
+(use-package smartparens
+  :ensure t
+  :config
+  (require 'smartparens-config))
+
+;;; projectile
+(use-package projectile
+  :ensure t)

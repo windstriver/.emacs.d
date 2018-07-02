@@ -114,7 +114,7 @@
 (use-package company
   :ensure t
   :init
-  ;(global-company-mode)
+  (global-company-mode)
   :config
   (progn
     (setq company-tooltip-align-annotations t)
@@ -125,8 +125,18 @@
 (use-package smartparens
   :ensure t
   :config
-  (require 'smartparens-config))
+  (progn
+    (require 'smartparens-config)
+    (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)))
 
 ;;; projectile
 (use-package projectile
   :ensure t)
+
+;;; Octave mode
+(use-package octave
+  :ensure t
+  :init
+  (setq auto-mode-alist
+	(cons '("\\.m$" . octave-mode) auto-mode-alist)))
+

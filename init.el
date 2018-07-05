@@ -127,7 +127,7 @@
   :config
   (progn
     (require 'smartparens-config)
-    (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)))
+    (smartparens-global-mode t)))
 
 ;;; projectile
 (use-package projectile
@@ -140,3 +140,6 @@
   (setq auto-mode-alist
 	(cons '("\\.m$" . octave-mode) auto-mode-alist)))
 
+;;; CC mode
+(setq c-default-style "linux"
+      c-basic-offset 4)

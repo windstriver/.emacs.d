@@ -18,7 +18,7 @@
 
 ;;; GUI
 ;;; Disable the menu bar
-;(menu-bar-mode -1)
+(menu-bar-mode -1)
 ;; Disable the toolbar
 (tool-bar-mode -1)
 ;; Disable the scroll bar

@@ -143,3 +143,6 @@
 ;;; CC mode
 (setq c-default-style "linux"
       c-basic-offset 4)
+
+;;; emacs client
+(server-start)

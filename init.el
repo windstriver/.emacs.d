@@ -146,3 +146,16 @@
 
 ;;; emacs client
 (server-start)
+
+;;; comment-or-uncomment region or line
+(defun comment-or-uncomment-region-or-line ()
+  "comments or uncomments the region or the current line if there's no active region."
+  (interactive)
+  (let (beg end)
+    (if (region-active-p)
+	(setq beg (region-beginning) end (region-end))
+      (setq beg (line-beginning-position) end (line-end-position)))
+    (comment-or-uncomment-region beg end)
+    (next-line)))
+
+(global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)

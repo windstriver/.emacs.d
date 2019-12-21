@@ -16,6 +16,11 @@
   (require 'use-package))
 (require 'bind-key)
 
+;;; Coding system
+(prefer-coding-system 'utf-8-unix)
+(set-default-coding-systems 'utf-8-unix)
+(set-language-environment 'utf-8)
+
 ;;; GUI
 ;;; Disable the menu bar
 (menu-bar-mode -1)
@@ -30,9 +35,10 @@
 (setq max-mini-window-height nil)
 ;; Highlight current line
 (global-hl-line-mode +1)
+;; Show cursor position within line
+(column-number-mode t)
 
 ;;; Themes
-; (load-theme 'leuven t)
 (use-package zenburn-theme
   :ensure t
   :config
@@ -40,12 +46,13 @@
 
 ;;; Disable backup of files
 (setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;;; Turn on Auto Fill mode automatically in Text mode
 (add-hook 'text-mode-hook 'auto-fill-mode)
 
 ;;; Spell checking
-(setq ispell-program-name "/usr/local/bin/aspell")
+;; (setq ispell-program-name "/usr/local/bin/aspell")
 
 ;;; Org mode
 (use-package org
@@ -63,6 +70,7 @@
     (setq org-directory "~/Dropbox/Org")
     (setq org-agenda-files (list "gtd.org"))
     (setq org-default-notes-file "notes.org")
+    (setq org-log-done 'time)
     ;; org capture templates
     (setq org-capture-templates
 	  '(("t" "Todo" entry (file+headline "gtd.org" "INS")
@@ -76,14 +84,14 @@
 				   "#+STARTUP: content\n"
 				   "#+STARTUP: indent\n")))
     (setq org-todo-keywords
-	  '((sequence "TODO" "WAIT" "PROJ" "|" "DONE" "CACL")))))
+	  '((sequence "TODO" "PROJ" "WAIT" "|" "DONE" "CACL")))))
 
 ;; org bullets
-(use-package org-bullets
-  :ensure t
-  :init
-  (add-hook 'org-mode-hook
-	    (lambda () (org-bullets-mode +1))))
+;; (use-package org-bullets
+  ;; :ensure t
+  ;; :init
+  ;; (add-hook 'org-mode-hook
+	    ;; (lambda () (org-bullets-mode +1))))
 
 ;;; ivy
 (use-package ivy
@@ -134,18 +142,15 @@
   :ensure t)
 
 ;;; Octave mode
-(use-package octave
-  :ensure t
-  :init
-  (setq auto-mode-alist
-	(cons '("\\.m$" . octave-mode) auto-mode-alist)))
+;; (use-package octave
+  ;; :ensure t
+  ;; :init
+  ;; (setq auto-mode-alist
+	;; (cons '("\\.m$" . octave-mode) auto-mode-alist)))
 
 ;;; CC mode
 (setq c-default-style "linux"
       c-basic-offset 4)
-
-;;; emacs client
-(server-start)
 
 ;;; comment-or-uncomment region or line
 (defun comment-or-uncomment-region-or-line ()
@@ -157,5 +162,7 @@
       (setq beg (line-beginning-position) end (line-end-position)))
     (comment-or-uncomment-region beg end)
     (next-line)))
-
 (global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
+
+;;; emacs client
+(server-start)

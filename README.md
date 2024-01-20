@@ -1,2 +1,2 @@
 # .emacs.d
-Emacs configuration files.
+Emacs config from scratch

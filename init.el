@@ -1,8 +1,4 @@
 ;; UI
-(setq inhibit-startup-message t)
-(put 'inhibit-startup-echo-area-message 'saved-value
-     (setq inhibit-startup-echo-area-message (user-login-name)))
-
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -16,6 +12,11 @@
 
 ;; set up the visible bell
 (setq visible-bell t)
+
+;; hide init messages
+(setq inhibit-startup-message t)
+(put 'inhibit-startup-echo-area-message 'saved-value
+     (setq inhibit-startup-echo-area-message (user-login-name)))
 
 ;; font
 (set-face-attribute 'default nil :font "Iosevka" :height 130)
@@ -57,15 +58,17 @@
 ;; vertico
 (use-package vertico
   :ensure t
-  :init
+  :config
   (vertico-mode))
 
 ;; which-key
 (use-package which-key
-  :init (which-key-mode)
+  :init
+  (setq which-key-idle-delay 0.5)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.5))
+  (which-key-mode))
+
 
 ;; nerd-icons
 (use-package nerd-icons
@@ -76,25 +79,27 @@
 ;; doom-modeline
 (use-package doom-modeline
   :ensure t
-  :config
+  :init
   (setq doom-modeline-icon nil)
-  :init (doom-modeline-mode 1))
+  :config
+  (doom-modeline-mode 1))
 
 ;; doom-one theme
 (use-package doom-themes
   :ensure t
-  :config
+  :init
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  :config
   (load-theme 'doom-one t))
 
 ;; evil
 (use-package evil
   :ensure t
-  :bind (("<escape>" . keyboard-escape-quit))
   :init
   (setq evil-want-C-i-jump nil)
+  :config
   (evil-mode 1))
 
 ;; markdown

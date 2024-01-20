@@ -1,168 +1,103 @@
-;;; Package repository
-(require 'package)
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archives
-	     '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives
-	     '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; UI
+(setq inhibit-startup-message t)
+(put 'inhibit-startup-echo-area-message 'saved-value
+     (setq inhibit-startup-echo-area-message (user-login-name)))
 
-;;; use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-
-(eval-when-compile
-  (require 'use-package))
-(require 'bind-key)
-
-;;; Coding system
-(prefer-coding-system 'utf-8-unix)
-(set-default-coding-systems 'utf-8-unix)
-(set-language-environment 'utf-8)
-
-;;; GUI
-;;; Disable the menu bar
 (menu-bar-mode -1)
-;; Disable the toolbar
 (tool-bar-mode -1)
-;; Disable the scroll bar
 (scroll-bar-mode -1)
-;; Disable the startup screen
-(setq inhibit-startup-screen t)
-;; Minibuffer
-(setq resize-mini-windows nil)
-(setq max-mini-window-height nil)
-;; Highlight current line
-(global-hl-line-mode +1)
-;; Show cursor position within line
-(column-number-mode t)
 
-;;; Themes
-(use-package zenburn-theme
-  :ensure t
-  :config
-  (load-theme 'zenburn t))
+(tooltip-mode -1)
+(set-fringe-mode 30)
 
-;;; Disable backup of files
-(setq make-backup-files nil)
-(setq auto-save-default nil)
+;; full screen
+(add-to-list 'default-frame-alist '(undecorated . t))
+(add-hook 'window-setup-hook 'toggle-frame-maximized t)
 
-;;; Turn on Auto Fill mode automatically in Text mode
-(add-hook 'text-mode-hook 'auto-fill-mode)
+;; set up the visible bell
+(setq visible-bell t)
 
-;;; Spell checking
-;; (setq ispell-program-name "/usr/local/bin/aspell")
+;; font
+(set-face-attribute 'default nil :font "Iosevka" :height 130)
 
-;;; Org mode
-(use-package org
-  :ensure t
-  :mode ("\\.org\\'" . org-mode)
-  :bind
-  ("C-c l" . org-store-link)
-  ("C-c a" . org-agenda)
-  ("C-c c" . org-capture)
-  ("C-c b" . org-iswitchb)
-  ("C-c C-w" . org-refile)
-  
-  :config
-  (progn
-    (setq org-directory "~/Dropbox/Org")
-    (setq org-agenda-files (list "gtd.org"))
-    (setq org-default-notes-file "notes.org")
-    (setq org-log-done 'time)
-    ;; org capture templates
-    (setq org-capture-templates
-	  '(("t" "Todo" entry (file+headline "gtd.org" "INS")
-             "* TODO %?\n%i\n%a")
-            ("j" "Journal" entry (file+olp+datetree "journal.org")
-             "* %?\nEntered on %U\n%i\n%a")))
-    ;; Structure completion elements   
-    (add-to-list 'org-structure-template-alist
-		 (list "m" (concat "#+TITLE: ?\n"
-				   "#+AUTHOR: Wang, Yong\n"
-				   "#+STARTUP: content\n"
-				   "#+STARTUP: indent\n")))
-    (setq org-todo-keywords
-	  '((sequence "TODO" "PROJ" "WAIT" "|" "DONE" "CACL")))))
+;; make ESC quit prompts
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-;; org bullets
-;; (use-package org-bullets
-  ;; :ensure t
-  ;; :init
-  ;; (add-hook 'org-mode-hook
-	    ;; (lambda () (org-bullets-mode +1))))
+;; coding system
+(prefer-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
 
-;;; ivy
-(use-package ivy
+;; org-mode
+(setq org-directory "~/OneDrive - RWE/Documents/GTD-Org")
+(setq org-agenda-files (list "gtd.org"))
+(setq org-clock-mode-line-total 'today)
+
+;; Straight.el bootstrap
+(defvar bootstrap-version)
+(let ((bootstrap-file
+        (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+	    user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; use-package default with straight
+(use-package straight
+  :custom
+  (straight-use-package-by-default t))
+
+;; vertico
+(use-package vertico
   :ensure t
   :init
-  (setq ivy-use-virtual-buffers nil)
-  (setq ivy-count-format "(%d/%d)")
-  :diminish ivy-mode
-  :bind
-  ("C-c C-r" . ivy-resume)
-  :config
-  (ivy-mode +1))
-;; swiper
-(use-package swiper
-  :ensure t
-  :bind
-  ("C-s" . swiper))
-;; counsel
-(use-package counsel
-  :ensure t
-  :bind
-  ("M-x" . counsel-M-x)
-  ("C-x C-f" . counsel-find-file)
-  ("C-h f" . counsel-describe-function)
-  ("C-h v" . counsel-describe-variable))
+  (vertico-mode))
 
-;;; company
-(use-package company
+;; which-key
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.5))
+
+;; nerd-icons
+(use-package nerd-icons
+  :straight t
+  :custom
+  (nerd-icons-font-family "Symbols Nerd Font Mono"))
+
+;; doom-modeline
+(use-package doom-modeline
   :ensure t
+  :config
+  (setq doom-modeline-icon nil)
+  :init (doom-modeline-mode 1))
+
+;; doom-one theme
+(use-package doom-themes
+  :ensure t
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (load-theme 'doom-one t))
+
+;; evil
+(use-package evil
+  :ensure t
+  :bind (("<escape>" . keyboard-escape-quit))
   :init
-  (global-company-mode)
-  :config
-  (progn
-    (setq company-tooltip-align-annotations t)
-    (setq comany-show-numbers t))
-  :diminish company-mode)
+  (setq evil-want-C-i-jump nil)
+  (evil-mode 1))
 
-;;; smartparens
-(use-package smartparens
+;; markdown
+(use-package markdown-mode
   :ensure t
-  :config
-  (progn
-    (require 'smartparens-config)
-    (smartparens-global-mode t)))
-
-;;; projectile
-(use-package projectile
-  :ensure t)
-
-;;; Octave mode
-;; (use-package octave
-  ;; :ensure t
-  ;; :init
-  ;; (setq auto-mode-alist
-	;; (cons '("\\.m$" . octave-mode) auto-mode-alist)))
-
-;;; CC mode
-(setq c-default-style "linux"
-      c-basic-offset 4)
-
-;;; comment-or-uncomment region or line
-(defun comment-or-uncomment-region-or-line ()
-  "comments or uncomments the region or the current line if there's no active region."
-  (interactive)
-  (let (beg end)
-    (if (region-active-p)
-	(setq beg (region-beginning) end (region-end))
-      (setq beg (line-beginning-position) end (line-end-position)))
-    (comment-or-uncomment-region beg end)
-    (next-line)))
-(global-set-key (kbd "M-;") 'comment-or-uncomment-region-or-line)
-
-;;; emacs client
-(server-start)
+  :mode ("READ\\.md\\'" . gfm-mode))

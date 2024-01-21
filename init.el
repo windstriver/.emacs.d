@@ -50,9 +50,11 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; use-package 
-(require 'use-package-ensure)
-(setq use-package-always-ensure t)
+;; straight: integration with use-package 
+; use-package will use straight.el to automatically install missing packages if you provide :straight t
+; Specifying :straight t is unnecessary if you set straight-use-package-by-default to a non-nil value.
+; variable use-package-always-ensure is associated with package.el, should not be used with straight.el
+(setq straight-use-package-version 'straight)
 (setq straight-use-package-by-default t)
 
 ;; vertico
@@ -67,7 +69,6 @@
   :diminish which-key-mode
   :config
   (which-key-mode))
-
 
 ;; nerd-icons
 (use-package nerd-icons

@@ -50,14 +50,13 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
-;; use-package default with straight
-(use-package straight
-  :custom
-  (straight-use-package-by-default t))
+;; use-package 
+(require 'use-package-ensure)
+(setq use-package-always-ensure t)
+(setq straight-use-package-by-default t)
 
 ;; vertico
 (use-package vertico
-  :ensure t
   :config
   (vertico-mode))
 
@@ -72,13 +71,11 @@
 
 ;; nerd-icons
 (use-package nerd-icons
-  :straight t
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono"))
 
 ;; doom-modeline
 (use-package doom-modeline
-  :ensure t
   :init
   (setq doom-modeline-icon nil)
   :config
@@ -86,9 +83,7 @@
 
 ;; doom-one theme
 (use-package doom-themes
-  :ensure t
   :init
-  ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
   :config
@@ -96,7 +91,6 @@
 
 ;; evil
 (use-package evil
-  :ensure t
   :init
   (setq evil-want-C-i-jump nil)
   :config
@@ -104,5 +98,4 @@
 
 ;; markdown
 (use-package markdown-mode
-  :ensure t
-  :mode ("READ\\.md\\'" . gfm-mode))
+  :mode ("\\.md\\'" . gfm-mode))

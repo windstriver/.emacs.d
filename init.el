@@ -19,7 +19,7 @@
      (setq inhibit-startup-echo-area-message (user-login-name)))
 
 ;; font
-(set-face-attribute 'default nil :font "Iosevka" :height 130)
+(set-face-attribute 'default nil :font "Iosevka" :height 120)
 
 ;; make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -29,9 +29,23 @@
 (set-default-coding-systems 'utf-8)
 
 ;; org-mode
-(setq org-directory "~/OneDrive - RWE/Documents/GTD-Org")
-(setq org-agenda-files (list "gtd.org"))
+(setq org-directory "~/OneDrive - RWE/Documents/GTD-Org/")
+(setq org-agenda-files (list "gtd.org" "notes.org" "journal.org"))
+
 (setq org-clock-mode-line-total 'today)
+
+; org-capture
+(setq org-capture-templates
+      '(("n" "Note" entry (file+headline "notes.org" "INBOX")
+	 "* %?\nEntered on %U\n%i\n%a")
+	("j" "Journal" entry (file+datetree "journal.org")
+	 "* %?\nEntered on %U\n%i\n%a")))
+
+; org-babel
+(org-babel-do-load-languages 'org-babel-load-languages '((emacs-lisp . t)
+							 (python . t)))
+;; calendar/diary
+(setq diary-file (concat org-directory "diary"))
 
 ;; Straight.el bootstrap
 (defvar bootstrap-version)
@@ -65,7 +79,7 @@
 ;; which-key
 (use-package which-key
   :init
-  (setq which-key-idle-delay 0.5)
+  (setq which-key-idle-delay 3)
   :diminish which-key-mode
   :config
   (which-key-mode))
@@ -79,6 +93,7 @@
 (use-package doom-modeline
   :init
   (setq doom-modeline-icon nil)
+  (setq doom-modeline-buffer-encoding nil)
   :config
   (doom-modeline-mode 1))
 
@@ -91,11 +106,11 @@
   (load-theme 'doom-one t))
 
 ;; evil
-(use-package evil
-  :init
-  (setq evil-want-C-i-jump nil)
-  :config
-  (evil-mode 1))
+;; (use-package evil
+;;  :init
+;;  (setq evil-want-C-i-jump nil)
+;;  :config
+;;  (evil-mode 1))
 
 ;; markdown
 (use-package markdown-mode
